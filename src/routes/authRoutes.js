@@ -17,5 +17,4 @@ router.post('/signin', validateRequest, otpRateLimiter, signin);
 
 router.post('/signin/verify', otpVerificationRules, validateRequest, otpRateLimiter, signinVerify);
 
-
 module.exports = router;

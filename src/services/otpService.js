@@ -9,7 +9,7 @@ function generateOTP(email, ttlSeconds = 300) {
   const expires = Date.now() + ttlSeconds * 1000;
 
   otpStore[email] = { otp, expires };
-  sendOTP(email);
+  
   return otp;
 }
 
@@ -29,9 +29,14 @@ function verifyOTP(email, inputOTP) {
   return isValid;
 }
 
-async function sendOTP(email){
-  // After generating an OTP
-  const otp = generateOTP(email);
+async function sendOTP(email) {
+  // Get the OTP from the store instead of generating a new one
+  const otpRecord = otpStore[email];
+  if (!otpRecord) {
+    throw new Error('No OTP found for this email');
+  }
+  
+  const otp = otpRecord.otp;
   const subject = 'Your OTP Code';
   const text = `Your OTP code is: ${otp}. It is valid for 5 minutes.`;
   const html = `<p>Your OTP code is: <strong>${otp}</strong>.</p><p>It is valid for 5 minutes.</p>`;
@@ -40,7 +45,6 @@ async function sendOTP(email){
     await sendEmail(email, subject, text, html);
     return otp;
   } catch (err) {
-    // Handle email sending error (e.g., log it, respond with an appropriate error message, etc.)
     console.error('Failed to send OTP email:', err);
     throw new Error('Failed to send OTP email.');
   }

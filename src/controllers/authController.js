@@ -2,7 +2,7 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const User = require("../model/userModel");
-const { generateOTP, verifyOTP } = require("../services/otpService");
+const { generateOTP, verifyOTP, sendOTP } = require("../services/otpService");
 const bcrypt = require('bcryptjs');
 
 async function signup(req, res, next) {
@@ -25,6 +25,7 @@ async function signup(req, res, next) {
 
     // Generate OTP (valid for 5 minutes).
     const otp = generateOTP(email);
+    await sendOTP(email);
     console.log(`Signup OTP for ${email}: ${otp}`);
 
     // Here, you would integrate an email service to actually send the OTP.
@@ -94,6 +95,7 @@ async function signin(req, res, next) {
 
     // Generate OTP (valid for 5 minutes).
     const otp = generateOTP(email);
+    await sendOTP(email);
     console.log(`Signin OTP for ${email}: ${otp}`);
 
     // Here, you would integrate an email service to actually send the OTP.
