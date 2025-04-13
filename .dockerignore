@@ -1,0 +1,17 @@
+# Node modules (should be installed in the container)
+node_modules
+npm-debug.log
+
+# Git files
+.git
+.gitignore
+
+# Environment files
+.env
+.env.local
+
+# Other files and directories not required in the Docker image
+README.md
+tests
+seeders
+factories
